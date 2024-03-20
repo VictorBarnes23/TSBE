@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
             List<Ticket> result = dbContext.Tickets.ToList();
             if (filter != null)
             {
-                return Ok(result.Where(t => t.Title == filter));
+                return Ok(result.Where(t => t.Title.ToLower().Trim() == filter.ToLower().Trim()));
             }
             else
             {
