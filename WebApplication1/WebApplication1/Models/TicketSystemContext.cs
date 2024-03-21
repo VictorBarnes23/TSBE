@@ -19,6 +19,8 @@ public partial class TicketSystemContext : DbContext
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
+    public virtual DbSet<TicketUser> TicketUsers { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=.\\sqlexpress;Initial Catalog=TicketSystem; Integrated Security=SSPI;Encrypt=false;TrustServerCertificate=True;");
@@ -27,22 +29,54 @@ public partial class TicketSystemContext : DbContext
     {
         modelBuilder.Entity<Favorite>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC07C7B46EC9");
+            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC074946C6B1");
+
+            entity.Property(e => e.TicketId).HasColumnName("TicketID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.Favorites)
                 .HasForeignKey(d => d.TicketId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Favorites__Ticke__4D94879B");
+                .HasConstraintName("FK__Favorites__Ticke__6383C8BA");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Favorites)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Favorites__UserI__628FA481");
         });
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tickets__3214EC07AAE51D63");
+            entity.HasKey(e => e.Id).HasName("PK__Tickets__3214EC07527111C1");
 
             entity.Property(e => e.Description).HasMaxLength(4000);
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Resolver).HasMaxLength(255);
             entity.Property(e => e.Title).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<TicketUser>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__TicketUs__3214EC0795D7556D");
+
+            entity.ToTable("TicketUser");
+
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.GoogleId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("GoogleID");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Username)
+                .HasMaxLength(255)
+                .IsUnicode(false);
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
+using WebApplication1.Models.DTOs;
 
 namespace WebApplication1.Controllers
 {
@@ -10,10 +11,23 @@ namespace WebApplication1.Controllers
     {
         private TicketSystemContext dbContext = new TicketSystemContext();
 
+        private static TicketDTO ConvertDTO(Ticket t)
+        {
+            return new TicketDTO
+            {
+                Id = t.Id,
+                Title = t.Title,
+                Description = t.Description,
+                Name = t.Name,
+                Resolver = t.Resolver,
+                Completed = t.Completed,
+            };
+        }
+
         [HttpGet]
         public IActionResult GetAll(string? filter)
         {
-            List<Ticket> result = dbContext.Tickets.ToList();
+            List<TicketDTO> result = dbContext.Tickets.Select((Ticket t) => ConvertDTO(t)).ToList();
             if (filter != null)
             {
                 return Ok(result.Where(t => t.Title.ToLower().Trim() == filter.ToLower().Trim()));
