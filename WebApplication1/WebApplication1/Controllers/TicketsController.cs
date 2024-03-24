@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Diagnostics.CodeAnalysis;
 using WebApplication1.Models;
 using WebApplication1.Models.DTOs;
 
@@ -60,9 +62,11 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update([FromBody] Ticket t, int id)
+        public IActionResult Update([FromBody] TicketDTO t, int id)
         {
-            if (t.Id != id)
+            Ticket Tickets = dbContext.Tickets.Find(id);
+            
+            if (Tickets == null)
             {
                 return BadRequest();
             }
@@ -72,8 +76,32 @@ namespace WebApplication1.Controllers
             }
             else
             {
-                dbContext.Tickets.Update(t);
-                dbContext.SaveChanges();    
+                if(t.Title != null)
+                {
+                    Tickets.Title = t.Title;
+                }
+                if (t.Description != null)
+                {
+                    Tickets.Description = t.Description;
+                }
+                if (t.Resolution != null)
+                {
+                    Tickets.Resolution = t.Resolution;
+                }
+                if (t.Name != null)
+                {
+                    Tickets.Name = t.Name;
+                }
+                if (t.Resolver != null)
+                {
+                    Tickets.Resolver = t.Resolver;
+                }
+                if (t.Completed != null)
+                {
+                    Tickets.Completed = t.Completed;
+                }
+                dbContext.Tickets.Update(Tickets);
+                dbContext.SaveChanges();
                 return NoContent();
             }
         }
