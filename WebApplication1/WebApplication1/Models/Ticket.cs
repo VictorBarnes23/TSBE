@@ -11,7 +11,9 @@ public partial class Ticket
 
     public string Description { get; set; } = null!;
 
-    public string Name { get; set; } = null!;
+    public string? Resolution { get; set; }
+
+    public string? Name { get; set; }
 
     public string? Resolver { get; set; }
 
