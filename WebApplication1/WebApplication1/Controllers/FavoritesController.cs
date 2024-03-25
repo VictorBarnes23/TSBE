@@ -11,8 +11,8 @@ namespace WebApplication1.Controllers
     {
         private TicketSystemContext dbContext = new TicketSystemContext();
 
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        [HttpGet]
+        public IActionResult Get(string id)
         {
             List<int> favList = dbContext.Favorites.Where(f => f.UserId == id).Select(f => f.TicketId).ToList();
 
@@ -25,5 +25,17 @@ namespace WebApplication1.Controllers
             else { return Ok(list); }
         }
 
+        [HttpPost]
+        public IActionResult Post(int id, string userId)
+        {
+            Favorite newFav = new Favorite();
+            newFav.Id = 0;
+            newFav.UserId = userId;
+            newFav.TicketId = id;
+            dbContext.Favorites.Add(newFav);
+            dbContext.SaveChanges();
+            return Ok(newFav);
+        }
     }
+
 }

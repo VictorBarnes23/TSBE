@@ -29,25 +29,22 @@ public partial class TicketSystemContext : DbContext
     {
         modelBuilder.Entity<Favorite>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC078F7116A3");
+            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC07688E1B40");
 
             entity.Property(e => e.TicketId).HasColumnName("TicketID");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(255)
+                .HasColumnName("UserID");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.Favorites)
                 .HasForeignKey(d => d.TicketId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Favorites__Ticke__0B91BA14");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Favorites)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Favorites__UserI__0A9D95DB");
+                .HasConstraintName("FK__Favorites__Ticke__29221CFB");
         });
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tickets__3214EC07E37970A3");
+            entity.HasKey(e => e.Id).HasName("PK__Tickets__3214EC074058EAC7");
 
             entity.Property(e => e.Description).HasMaxLength(4000);
             entity.Property(e => e.Name).HasMaxLength(255);
@@ -58,7 +55,7 @@ public partial class TicketSystemContext : DbContext
 
         modelBuilder.Entity<TicketUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TicketUs__3214EC077D1B4CB5");
+            entity.HasKey(e => e.Id).HasName("PK__TicketUs__3214EC0795D7556D");
 
             entity.ToTable("TicketUser");
 

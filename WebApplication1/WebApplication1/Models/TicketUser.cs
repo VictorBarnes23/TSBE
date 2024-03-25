@@ -16,6 +16,4 @@ public partial class TicketUser
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
-
-    public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 }
