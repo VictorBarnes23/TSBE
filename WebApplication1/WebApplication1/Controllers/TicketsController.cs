@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 using WebApplication1.Models;
 using WebApplication1.Models.DTOs;
@@ -23,13 +24,14 @@ namespace WebApplication1.Controllers
                 Name = t.Name,
                 Resolver = t.Resolver,
                 Completed = t.Completed,
+                Favorites = t.Favorites.Select(f => f.UserId.ToString()).ToList(),
             };
         }
 
         [HttpGet]
         public IActionResult GetAll(string? filter)
         {
-            List<TicketDTO> result = dbContext.Tickets.Select((Ticket t) => ConvertDTO(t)).ToList();
+            List<TicketDTO> result = dbContext.Tickets.Include(f => f.Favorites).Select((Ticket t) => ConvertDTO(t)).ToList();
             if (filter != null)
             {
                 return Ok(result.Where(t => t.Title.ToLower().Trim() == filter.ToLower().Trim()));

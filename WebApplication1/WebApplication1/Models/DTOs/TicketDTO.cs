@@ -15,6 +15,8 @@
 
         public bool? Completed { get; set; }
 
+        public List<string>? Favorites { get; set; }
+
     }
 
 }

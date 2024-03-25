@@ -26,15 +26,15 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(int id, string userId)
+        public IActionResult Post([FromBody] Favorite f)
         {
-            Favorite newFav = new Favorite();
-            newFav.Id = 0;
-            newFav.UserId = userId;
-            newFav.TicketId = id;
-            dbContext.Favorites.Add(newFav);
+            f.Id = 0;
+            dbContext.Favorites.Add(f);
             dbContext.SaveChanges();
-            return Ok(newFav);
+            return CreatedAtAction(nameof(Get), new
+            {
+                id = f.Id
+            }, f);
         }
     }
 
